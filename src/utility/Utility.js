@@ -21,7 +21,7 @@ class Utility {
         user.uniqueKey = this.generateUniqueKey(user.fName, user.mNumber);
         user.checkIn = new Date();
         user.pass = prompt("Choose a password : ");
-        this.writeJSON(user);
+        this.writeJSON(user, "D:/HotelManagement/json/data.json");
         console.log();
         console.log(user.fName, user.lName, "registered successfully");
     };
@@ -37,27 +37,32 @@ class Utility {
     };
 
     /**
-     * Write user object to json file
-     * @param {Object} user 
+     * Writes json objects to file
+     * @param {object} user 
+     * @param {path} filepath 
      */
-    writeJSON = (user) => {
-        const docObj = this.getJsonObj("D:/HotelManagement/json/data.json");
-        docObj.push(user);
-        const str = JSON.stringify(docObj);
-        fs.writeFileSync("D:/HotelManagement/json/data.json", str);
-    };
+    writeJSON = (user, filepath) => {
+        try {
+            const docObj = JSON.parse(fs.readFileSync(filepath));
+            docObj.push(user);
+            fs.writeFileSync(filepath, JSON.stringify(docObj));
+        } catch {
+            let docArray = new Array();
+            docArray.push(user);
+            fs.writeFileSync(filepath, JSON.stringify(docArray));
+        }
+    }
 
     /**
      * After checking name and password in filepath, allows user to access menu
-     * @param {string} name 
-     * @param {string} password 
-     * @param {path} filepath 
      */
-    login = (name, password, filepath) => {
-        const doc = fs.readFileSync(filepath);
+    login = () => {
+        let username = prompt("Enter your username : ");
+        let password = prompt("Enter password : ");
+        const doc = fs.readFileSync("D:/HotelManagement/json/data.json");
         const docObj = JSON.parse(doc);
         for (let user in docObj) {
-            if ((docObj[user].firstName === name && docObj[user].password) === password) {
+            if ((docObj[user].firstName === username && docObj[user].password) === password) {
                 this.#loggedUser = docObj[user];
                 this.orderMenu();
             }
@@ -110,28 +115,30 @@ class Utility {
 
             switch (option) {
                 case 1:
-                    this.writeOrders(new Orders(this.#loggedUser.uniqueKey, "Tea", 1, 50));
+                    this.writeJSON(new Orders(this.#loggedUser.uniqueKey, "Tea", 1, 50),
+                        "D:/HotelManagement/json/orders.json");
                     console.log("\nOrder placed successfully");
                     break;
                 case 2:
-                    this.writeOrders(new Orders(this.#loggedUser.uniqueKey, "Breakfast", 1, 100));
+                    this.writeJSON(new Orders(this.#loggedUser.uniqueKey, "Breakfast", 1, 100),
+                        "D:/HotelManagement/json/orders.json");
                     console.log("\nOrder placed successfully");
                     break;
                 case 3:
-                    this.writeOrders(new Orders(this.#loggedUser.uniqueKey, "Lunch", 1, 250));
+                    this.writeJSON(new Orders(this.#loggedUser.uniqueKey, "Lunch", 1, 250),
+                        "D:/HotelManagement/json/orders.json");
                     console.log("\nOrder placed successfully");
                     break;
                 case 4:
-                    this.writeOrders(new Orders(this.#loggedUser.uniqueKey, "Dinner", 1, 350));
+                    this.writeJSON(new Orders(this.#loggedUser.uniqueKey, "Dinner", 1, 350),
+                        "D:/HotelManagement/json/orders.json");
                     console.log("\nOrder placed successfully");
                     break;
-                case 5:
-                    option = 6;
-                    break;
                 default:
+                    console.log();
                     break;
             }
-        } while (option != 6);
+        } while (option != 5);
     };
 
     /**
@@ -148,22 +155,25 @@ class Utility {
 
             switch (option) {
                 case 1:
-                    this.writeOrders(new Orders(this.#loggedUser.uniqueKey, "Laundry", 1, 200));
+                    this.writeJSON(new Orders(this.#loggedUser.uniqueKey, "Laundry", 1, 200),
+                        "D:/HotelManagement/json/orders.json");
                     console.log("\nOrder placed successfully");
                     break;
                 case 2:
-                    this.writeOrders(new Orders(this.#loggedUser.uniqueKey, "Tour", 1, 500));
+                    this.writeJSON(new Orders(this.#loggedUser.uniqueKey, "Tour", 1, 500),
+                        "D:/HotelManagement/json/orders.json");
                     console.log("\nOrder placed successfully");
                     break;
                 case 3:
-                    this.writeOrders(new Orders(this.#loggedUser.uniqueKey, "Car", 1, 3500));
+                    this.writeJSON(new Orders(this.#loggedUser.uniqueKey, "Car", 1, 3500),
+                        "D:/HotelManagement/json/orders.json");
                     console.log("\nOrder placed successfully");
                     break;
-                case 4:
-                    option = 5;
+                default:
+                    console.log();
                     break;
             }
-        } while (option != 5);
+        } while (option != 4);
     };
 
     /**
@@ -180,7 +190,6 @@ class Utility {
         docObj.forEach(element => {
             if (element.uniqueKey === uniqueKey) {
                 sum += element.price;
-                // stay = element.durationOfStay;
             }
         });
         docObj2.forEach(element => {
@@ -196,6 +205,30 @@ class Utility {
     }
 
     /**
+     * Updates user information and stores it in json file
+     * @param {object} obj 
+     * @param {date} checkOutDate 
+     * @param {number} sum
+     */
+    updateObj = (obj, checkOutDate, sum) => {
+        const docObj = this.getJsonObj("D:/HotelManagement/json/data.json");
+        for (let user in docObj) {
+            if (docObj[user].uniqueKey === obj.uniqueKey) {
+                docObj[user].firstName = obj.firstName;
+                docObj[user].lastName = obj.lastName;
+                docObj[user].gender = obj.gender;
+                docObj[user].mobileNumber = obj.mobileNumber;
+                docObj[user].durationOfStay = obj.durationOfStay;
+                docObj[user].checkInDate = obj.checkInDate;
+                docObj[user].checkOutDate = checkOutDate;
+                docObj[user].password = obj.password;
+                docObj[user].totalBill = sum;
+                this.writeJSON(docObj[user], "D:/HotelManagement/json/updatedUserInfo.json");
+            }
+        }
+    }
+
+    /**
      * Prints bill and makes user object null
      */
     checkOut = () => {
@@ -203,9 +236,11 @@ class Utility {
         let checkOutDate = new Date();
         let checkInDate = new Date(this.#loggedUser.checkInDate);
         let sum = this.createBill(uniqueKey, checkInDate, checkOutDate);
+        sum += sum * 0.18;
         console.log("\nThank you for using our service.");
         console.log(this.#loggedUser.firstName, this.#loggedUser.lastName);
         console.log("Amount payable is", 'Rs.' + sum);
+        this.updateObj(this.#loggedUser, checkOutDate, sum);
         this.#loggedUser = null;
     }
 
@@ -214,16 +249,21 @@ class Utility {
      * @param {string} username 
      * @param {string} password 
      */
-    adminPage = (username, password) => {
+    adminPage = () => {
+        let username = prompt("Enter your username : ");
+        let password = prompt("Enter key : ");
+        let flag = true;
         if (username === "Admin" && password === "admin123") {
             console.log("\nWelcome Admin");
-            console.log("\nPress 1 - Create report");
-            console.log("Press 2 - Log out\n");
-            let option = parseInt(prompt("Enter your choice : "));
-            if (option === 1) {
-                this.jsonToXlsx("D:/HotelManagement/json/data.json", "./reports/CustomerData.xlsx", 'CustomerData');
-                this.jsonToXlsx("D:/HotelManagement/json/orders.json", "./reports/OrderHistory.xlsx", 'OrderHistory');
-            }
+            do {
+                console.log("\nPress 1 - Create report");
+                console.log("Press 2 - Log out\n");
+                let option = parseInt(prompt("Enter your choice : "));
+                if (option === 1) {
+                    this.jsonToXlsx("D:/HotelManagement/json/updatedUserInfo.json", "./reports/CustomerData.xlsx", 'CustomerData');
+                    this.jsonToXlsx("D:/HotelManagement/json/orders.json", "./reports/OrderHistory.xlsx", 'OrderHistory');
+                } else if (option == 2) flag = false;
+            } while (flag)
         } else console.log("Invalid entry");
     }
 
@@ -243,18 +283,6 @@ class Utility {
             }
         }
     }
-
-
-    /**
-     * writes orders to json file
-     * @param {object} orders 
-     */
-    writeOrders = (orders) => {
-        const docObj = this.getJsonObj("D:/HotelManagement/json/orders.json");
-        docObj.push(orders);
-        const str = JSON.stringify(docObj);
-        fs.writeFileSync("D:/HotelManagement/json/orders.json", str);
-    };
 
     /**
      * 

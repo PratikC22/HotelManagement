@@ -5,8 +5,6 @@ const utility = new Utility();
 
 const startMenu = () => {
   console.log("\nWelcome to the Hotel management program");
-  let username;
-  let password;
   let flag = true;
   do {
     console.log("\nPress 1 - User Registration");
@@ -19,16 +17,10 @@ const startMenu = () => {
         utility.registerUser();
         break;
       case 2:
-        console.log();
-        username = prompt("Enter your username : ");
-        password = prompt("Enter password : ");
-        utility.login(username, password, "D:/HotelManagement/json/data.json");
+        utility.login();
         break;
       case 3:
-        console.log();
-        username = prompt("Enter your username : ");
-        password = prompt("Enter key : ");
-        utility.adminPage(username, password);
+        utility.adminPage();
         break;
       case 4:
         flag = false;

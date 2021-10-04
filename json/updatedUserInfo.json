@@ -7,6 +7,8 @@
         "mobileNumber": "9657586962",
         "durationOfStay": "2",
         "checkInDate": "2021-10-04T18:18:33.152Z",
-        "password": "pratik123"
+        "password": "pratik123",
+        "checkOutDate": "2021-10-04T19:24:43.416Z",
+        "totalBill": 767
     }
 ]
