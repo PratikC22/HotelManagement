@@ -1,0 +1,14 @@
+[
+    {
+        "uniqueKey": "Prat9657",
+        "item": "Tea",
+        "quantity": 1,
+        "price": 50
+    },
+    {
+        "uniqueKey": "Prat9657",
+        "item": "Breakfast",
+        "quantity": 1,
+        "price": 100
+    }
+]

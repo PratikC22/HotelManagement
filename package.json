@@ -1,0 +1,25 @@
+{
+  "name": "hotelmanagement",
+  "version": "1.0.0",
+  "description": "Hotel management program",
+  "main": "index.js",
+  "scripts": {
+    "start": "node App.js",
+    "test": "mocha src/test/Tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PratikC22/HotelManagement"
+  },
+  "keywords": [],
+  "author": "Pratik Chaudhari",
+  "license": "MIT",
+  "dependencies": {
+    "prompt-sync": "^4.2.0",
+    "xlsx": "^0.17.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.2"
+  }
+}
